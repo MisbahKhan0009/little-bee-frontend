@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   TouchableOpacity,
   Text,
@@ -7,6 +7,7 @@ import {
   ViewStyle,
   TextStyle
 } from 'react-native';
+import { Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '@/constants/theme';
 
@@ -29,6 +30,7 @@ export function ButtonPrimary({
   textStyle,
   variant = 'primary',
 }: ButtonPrimaryProps) {
+  const scale = useRef(new Animated.Value(1)).current;
   const getColors = () => {
     switch (variant) {
       case 'secondary':
@@ -45,20 +47,24 @@ export function ButtonPrimary({
       onPress={onPress}
       disabled={disabled || loading}
       activeOpacity={0.8}
-      style={[styles.container, style]}
+      onPressIn={() => Animated.spring(scale, { toValue: 0.96, useNativeDriver: true, friction: 6 }).start()}
+      onPressOut={() => Animated.spring(scale, { toValue: 1, useNativeDriver: true, friction: 6 }).start()}
+      style={[styles.container, style as any]}
     >
-      <LinearGradient
-        colors={getColors()}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        style={styles.gradient}
-      >
-        {loading ? (
-          <ActivityIndicator color={theme.colors.text} />
-        ) : (
-          <Text style={[styles.text, textStyle]}>{title}</Text>
-        )}
-      </LinearGradient>
+      <Animated.View style={{ transform: [{ scale }] }}>
+        <LinearGradient
+          colors={getColors() as any}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.gradient}
+        >
+          {loading ? (
+            <ActivityIndicator color={theme.colors.text} />
+          ) : (
+            <Text style={[styles.text, textStyle as any]}>{title}</Text>
+          )}
+        </LinearGradient>
+      </Animated.View>
     </TouchableOpacity>
   );
 }
@@ -83,6 +89,6 @@ const styles = StyleSheet.create({
   text: {
     color: theme.colors.text,
     fontSize: theme.fontSize.md,
-    fontWeight: theme.fontWeight.bold,
+    fontWeight: theme.fontWeight.bold as any,
   },
-});
+}) as any;

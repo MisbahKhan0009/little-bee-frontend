@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Easing } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Baby, Video, Bell, Settings as SettingsIcon, LogOut } from 'lucide-react-native';
@@ -17,6 +17,15 @@ export default function DashboardScreen() {
     await signOut();
     router.replace('/login');
   };
+
+  const a1 = useRef(new Animated.Value(0)).current;
+  const a2 = useRef(new Animated.Value(0)).current;
+  const a3 = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    const make = (v: Animated.Value, delay: number) =>
+      Animated.timing(v, { toValue: 1, duration: 380, delay, easing: Easing.out(Easing.quad), useNativeDriver: true });
+    Animated.stagger(80, [make(a1, 0), make(a2, 60), make(a3, 120)]).start();
+  }, [a1, a2, a3]);
 
   return (
     <LinearGradient
@@ -57,6 +66,7 @@ export default function DashboardScreen() {
         </GlassCard>
 
         <View style={styles.actionsGrid}>
+          <Animated.View style={{ opacity: a1, transform: [{ translateY: a1.interpolate({ inputRange: [0,1], outputRange: [12,0] }) }] }}>
           <TouchableOpacity
             onPress={() => router.push('/monitoring')}
             style={styles.actionCardWrapper}
@@ -69,7 +79,9 @@ export default function DashboardScreen() {
               <Text style={styles.actionSubtitle}>View live feed</Text>
             </GlassCard>
           </TouchableOpacity>
+          </Animated.View>
 
+          <Animated.View style={{ opacity: a2, transform: [{ translateY: a2.interpolate({ inputRange: [0,1], outputRange: [12,0] }) }] }}>
           <TouchableOpacity
             onPress={() => router.push('/notifications')}
             style={styles.actionCardWrapper}
@@ -89,7 +101,9 @@ export default function DashboardScreen() {
               </Text>
             </GlassCard>
           </TouchableOpacity>
+          </Animated.View>
 
+          <Animated.View style={{ opacity: a3, transform: [{ translateY: a3.interpolate({ inputRange: [0,1], outputRange: [12,0] }) }] }}>
           <TouchableOpacity
             onPress={() => router.push('/settings')}
             style={styles.actionCardWrapper}
@@ -102,6 +116,7 @@ export default function DashboardScreen() {
               <Text style={styles.actionSubtitle}>Manage account</Text>
             </GlassCard>
           </TouchableOpacity>
+          </Animated.View>
         </View>
       </ScrollView>
     </LinearGradient>
@@ -128,7 +143,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: theme.fontSize.xxl,
-    fontWeight: theme.fontWeight.bold,
+    fontWeight: theme.fontWeight.bold as any,
     color: theme.colors.text,
   },
   logoutButton: {
@@ -160,7 +175,7 @@ const styles = StyleSheet.create({
   statusText: {
     color: theme.colors.text,
     fontSize: theme.fontSize.sm,
-    fontWeight: theme.fontWeight.medium,
+    fontWeight: theme.fontWeight.medium as any,
   },
   statusDescription: {
     color: theme.colors.textSecondary,
@@ -192,7 +207,7 @@ const styles = StyleSheet.create({
   actionTitle: {
     color: theme.colors.text,
     fontSize: theme.fontSize.md,
-    fontWeight: theme.fontWeight.bold,
+    fontWeight: theme.fontWeight.bold as any,
     marginBottom: theme.spacing.xs,
   },
   actionSubtitle: {
@@ -214,6 +229,6 @@ const styles = StyleSheet.create({
   badgeText: {
     color: theme.colors.text,
     fontSize: 10,
-    fontWeight: theme.fontWeight.bold,
+    fontWeight: theme.fontWeight.bold as any,
   },
-});
+}) as any;

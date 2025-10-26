@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, StyleSheet, ViewStyle, Animated, Easing } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '@/constants/theme';
 
@@ -9,8 +9,17 @@ interface GlassCardProps {
 }
 
 export function GlassCard({ children, style }: GlassCardProps) {
+  const opacity = useRef(new Animated.Value(0)).current;
+  const translate = useRef(new Animated.Value(6)).current;
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(opacity, { toValue: 1, duration: 320, easing: Easing.out(Easing.quad), useNativeDriver: true }),
+      Animated.timing(translate, { toValue: 0, duration: 320, easing: Easing.out(Easing.quad), useNativeDriver: true }),
+    ]).start();
+  }, [opacity, translate]);
+
   return (
-    <View style={[styles.container, style]}>
+    <Animated.View style={[styles.container, style, { opacity, transform: [{ translateY: translate }] }]}>
       <LinearGradient
         colors={['rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.05)']}
         start={{ x: 0, y: 0 }}
@@ -19,7 +28,7 @@ export function GlassCard({ children, style }: GlassCardProps) {
       >
         {children}
       </LinearGradient>
-    </View>
+    </Animated.View>
   );
 }
 
