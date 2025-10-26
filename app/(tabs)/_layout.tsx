@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { Home, Bell, Settings, LineChart } from 'lucide-react-native';
+import { Home, Bell, Settings, LineChart, MessageCircle } from 'lucide-react-native';
 import { theme } from '@/constants/theme';
 import { useMonitoring } from '@/contexts/MonitoringContext';
 import { View, Text, StyleSheet } from 'react-native';
@@ -39,6 +39,13 @@ export default function TabLayout() {
         options={{
           title: 'Stats',
           tabBarIcon: ({ size, color }) => <LineChart size={size} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="chatbot"
+        options={{
+          title: 'Chat',
+          tabBarIcon: ({ size, color }) => <MessageCircle size={size} color={color} />,
         }}
       />
       <Tabs.Screen

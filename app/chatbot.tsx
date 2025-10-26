@@ -1,16 +1,19 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TextInput, KeyboardAvoidingView, Platform, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '@/constants/theme';
 import { GlassCard } from '@/components/GlassCard';
 import { ButtonPrimary } from '@/components/ButtonPrimary';
 import { askGroq, ChatMessage } from '@/lib/groq';
+import Markdown from 'react-native-markdown-display';
 
 type Message = { id: string; role: 'user' | 'assistant'; content: string };
 
 export default function ChatbotScreen() {
+  const insets = useSafeAreaInsets();
   const [messages, setMessages] = useState<Message[]>([{
-    id: 'welcome', role: 'assistant', content: 'Hi! I’m your childcare assistant. Ask me about sleep schedules, soothing techniques, feeding, and general baby care. I can provide supportive, non-judgmental guidance—but I’m not a substitute for medical advice. If there’s an emergency, contact your pediatrician or local emergency services.'
+    id: 'welcome', role: 'assistant', content: 'Hi! I’m your childcare assistant. Ask me about sleep schedules, soothing techniques, feeding, and general baby care.'
   }]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -22,7 +25,8 @@ export default function ChatbotScreen() {
       'You are a friendly, supportive childcare assistant specialized in infant care (0-24 months).',
       'Provide practical, evidence-aligned tips on sleep routines, feeding, soothing, growth milestones, hygiene, safety, illness warning signs, and caregiver self-care.',
       'Do not give medical diagnoses. For medical concerns, clearly state you are not a medical professional and advise contacting a pediatrician or emergency services when appropriate.',
-      'Be concise, structured, and empathetic. Use bullet points when helpful.'
+      'Be concise, structured, and empathetic. Use bullet points when helpful.',
+      'Use a cheerful, warm tone with friendly emojis where appropriate (e.g., 😊👶🍼). Keep emojis tasteful and supportive; avoid overuse.',
     ].join(' '),
   }), []);
 
@@ -50,42 +54,48 @@ export default function ChatbotScreen() {
 
   const renderItem = ({ item }: { item: Message }) => (
     <View style={[styles.bubble, item.role === 'user' ? styles.userBubble : styles.assistantBubble]}>
-      <Text style={styles.bubbleText}>{item.content}</Text>
+      {item.role === 'assistant' ? (
+        <Markdown style={markdownStyles}>{item.content}</Markdown>
+      ) : (
+        <Text style={styles.bubbleText}>{item.content}</Text>
+      )}
     </View>
   );
 
   return (
     <LinearGradient colors={[theme.colors.background, theme.colors.secondary]} style={styles.container}>
-      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={84}>
-        <View style={styles.headerWrap}>
+      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={insets.top + 12}>
+        <View style={[styles.headerWrap, { paddingTop: Math.max(60, insets.top + 20) }]}>
           <GlassCard>
             <Text style={styles.title}>Childcare Chatbot</Text>
-            <Text style={styles.subtitle}>Guidance for sleep, soothing, feeding, and more. Not medical advice.</Text>
+            
           </GlassCard>
         </View>
         <FlatList
           data={messages}
           keyExtractor={(m) => m.id}
           renderItem={renderItem}
-          contentContainerStyle={styles.listContent}
+          contentContainerStyle={[styles.listContent, { paddingBottom: 16 }]}
         />
-        <GlassCard style={styles.inputCard}>
-          <View style={styles.inputRow}>
-            <TextInput
-              value={input}
-              onChangeText={setInput}
-              placeholder="Ask about sleep, feeding, soothing..."
-              placeholderTextColor={theme.colors.textSecondary}
-              style={styles.input}
-              editable={!loading}
-              onSubmitEditing={sendMessage}
-              returnKeyType="send"
-            />
-            <TouchableOpacity onPress={sendMessage} disabled={loading} style={styles.sendBtn}>
-              {loading ? <ActivityIndicator color={theme.colors.text} /> : <Text style={styles.sendText}>Send</Text>}
-            </TouchableOpacity>
-          </View>
-        </GlassCard>
+        <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 2) }]}>
+          <GlassCard style={styles.inputCard}>
+            <View style={styles.inputRow}>
+              <TextInput
+                value={input}
+                onChangeText={setInput}
+                placeholder="Ask about sleep, feeding, soothing..."
+                placeholderTextColor={theme.colors.textSecondary}
+                style={styles.input}
+                editable={!loading}
+                onSubmitEditing={sendMessage}
+                returnKeyType="send"
+              />
+              <TouchableOpacity onPress={sendMessage} disabled={loading} style={styles.sendBtn}>
+                {loading ? <ActivityIndicator color={theme.colors.text} /> : <Text style={styles.sendText}>Send</Text>}
+              </TouchableOpacity>
+            </View>
+          </GlassCard>
+        </View>
       </KeyboardAvoidingView>
     </LinearGradient>
   );
@@ -102,7 +112,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.xs,
   },
   subtitle: { color: theme.colors.textSecondary },
-  listContent: { padding: theme.spacing.lg, paddingBottom: 120 },
+  listContent: { padding: theme.spacing.lg },
   bubble: {
     padding: theme.spacing.md,
     borderRadius: theme.borderRadius.lg,
@@ -118,7 +128,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   bubbleText: { color: theme.colors.text, fontSize: theme.fontSize.md },
-  inputCard: { padding: 0, position: 'absolute', bottom: 16, left: 16, right: 16 },
+  footer: { paddingHorizontal: theme.spacing.lg },
+  inputCard: { padding: 0 },
   inputRow: { flexDirection: 'row', alignItems: 'center' },
   input: {
     flex: 1,
@@ -135,3 +146,22 @@ const styles = StyleSheet.create({
   },
   sendText: { color: theme.colors.text, fontWeight: theme.fontWeight.bold as any },
 }) as any;
+
+const markdownStyles = {
+  body: { color: theme.colors.text, fontSize: theme.fontSize.md },
+  paragraph: { marginBottom: 8 },
+  strong: { fontWeight: theme.fontWeight.bold as any },
+  bullet_list: { marginBottom: 6 },
+  list_item: { marginBottom: 4 },
+  code_inline: {
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  code_block: {
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    padding: 10,
+    borderRadius: 8,
+  },
+} as const;

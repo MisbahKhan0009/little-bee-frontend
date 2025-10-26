@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { View, StyleSheet, ViewStyle, Animated, Easing } from 'react-native';
+import { StyleSheet, ViewStyle, Animated, Easing, StyleProp } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '@/constants/theme';
 
 interface GlassCardProps {
   children: React.ReactNode;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }
 
 export function GlassCard({ children, style }: GlassCardProps) {

@@ -100,7 +100,7 @@ export default function NotificationsScreen() {
             <Bell size={48} color={theme.colors.textSecondary} />
             <Text style={styles.emptyTitle}>No Notifications</Text>
             <Text style={styles.emptyText}>
-              You'll see cry detection alerts here
+              You’ll see cry detection alerts here
             </Text>
           </GlassCard>
         </View>

@@ -42,4 +42,4 @@ export const theme = {
     semibold: '600',
     bold: '700',
   },
-};
+} as const;
