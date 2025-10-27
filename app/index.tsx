@@ -5,7 +5,6 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
-  withSequence,
   withTiming,
   Easing,
 } from 'react-native-reanimated';
@@ -21,10 +20,7 @@ export default function SplashScreen() {
   const opacity = useSharedValue(0);
 
   useEffect(() => {
-    scale.value = withSequence(
-      withSpring(1.2, { damping: 2 }),
-      withSpring(1, { damping: 3 })
-    );
+    scale.value = withSpring(1, { damping: 3 });
     opacity.value = withTiming(1, { duration: 800, easing: Easing.ease });
 
     const timer = setTimeout(() => {
