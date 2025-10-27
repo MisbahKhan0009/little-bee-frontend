@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Easing } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Easing, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Baby, Video, Bell, Settings as SettingsIcon, LogOut } from 'lucide-react-native';
@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useMonitoring } from '@/contexts/MonitoringContext';
 import { GlassCard } from '@/components/GlassCard';
 import { theme } from '@/constants/theme';
+import { ui } from '@/constants/ui';
 
 export default function DashboardScreen() {
   const router = useRouter();
@@ -43,22 +44,22 @@ export default function DashboardScreen() {
           </TouchableOpacity>
         </View>
 
-        <GlassCard style={styles.statusCard}>
+        <GlassCard style={styles.statusCard} className={ui.cardContainer} contentClassName={ui.cardContent}>
           <View style={styles.statusHeader}>
             <Baby size={32} color={theme.colors.primary} />
-            <View style={styles.statusBadge}>
+            <View className="flex-row items-center ml-md  px-md py-sm rounded-full">
               <View
                 style={[
                   styles.statusDot,
                   { backgroundColor: isMonitoring ? theme.colors.success : theme.colors.textSecondary },
                 ]}
               />
-              <Text style={styles.statusText}>
+              <Text style={styles.statusText} className="text-text text-sm font-medium">
                 {isMonitoring ? 'Monitoring Active' : 'No Active Device'}
               </Text>
             </View>
           </View>
-          <Text style={styles.statusDescription}>
+          <Text style={styles.statusDescription} className={ui.subtle}>
             {devices.length > 0
               ? `${devices.length} device${devices.length > 1 ? 's' : ''} connected`
               : 'No devices connected'}
@@ -71,12 +72,12 @@ export default function DashboardScreen() {
             onPress={() => router.push('/monitoring')}
             style={styles.actionCardWrapper}
           >
-            <GlassCard style={styles.actionCard}>
-              <View style={styles.actionIcon}>
+            <GlassCard style={styles.actionCard} className={ui.cardContainer} contentClassName={ui.cardContent}>
+              <View style={styles.actionIcon} className={ui.actionIcon + ' bg-[rgba(1,204,102,0.1)]'}>
                 <Video size={32} color={theme.colors.primary} />
               </View>
-              <Text style={styles.actionTitle}>Monitoring</Text>
-              <Text style={styles.actionSubtitle}>View live feed</Text>
+              <Text style={styles.actionTitle} className="text-text text-md font-bold">Monitoring</Text>
+              <Text style={styles.actionSubtitle} className={ui.subtle + ' text-xs'}>View live feed</Text>
             </GlassCard>
           </TouchableOpacity>
           </Animated.View>
@@ -86,17 +87,17 @@ export default function DashboardScreen() {
             onPress={() => router.push('/notifications')}
             style={styles.actionCardWrapper}
           >
-            <GlassCard style={styles.actionCard}>
-              <View style={styles.actionIcon}>
+            <GlassCard style={styles.actionCard} className={ui.cardContainer} contentClassName={ui.cardContent}>
+              <View style={styles.actionIcon} className={ui.actionIcon + ' bg-[rgba(1,204,102,0.1)]'}>
                 <Bell size={32} color={theme.colors.primary} />
                 {unreadCount > 0 && (
-                  <View style={styles.notificationBadge}>
-                    <Text style={styles.badgeText}>{unreadCount}</Text>
+                  <View style={styles.notificationBadge} className={ui.notifBadge + ' min-w-[20px] h-[20px] px-[6px]'}>
+                    <Text style={styles.badgeText} className="text-[10px] text-text font-bold">{unreadCount}</Text>
                   </View>
                 )}
               </View>
-              <Text style={styles.actionTitle}>Notifications</Text>
-              <Text style={styles.actionSubtitle}>
+              <Text style={styles.actionTitle} className="text-text text-md font-bold">Notifications</Text>
+              <Text style={styles.actionSubtitle} className={ui.subtle + ' text-xs'}>
                 {unreadCount > 0 ? `${unreadCount} new` : 'View history'}
               </Text>
             </GlassCard>
@@ -108,12 +109,12 @@ export default function DashboardScreen() {
             onPress={() => router.push('/settings')}
             style={styles.actionCardWrapper}
           >
-            <GlassCard style={styles.actionCard}>
-              <View style={styles.actionIcon}>
+            <GlassCard style={styles.actionCard} className={ui.cardContainer} contentClassName={ui.cardContent}>
+              <View style={styles.actionIcon} className={ui.actionIcon + ' bg-[rgba(1,204,102,0.1)]'}>
                 <SettingsIcon size={32} color={theme.colors.primary} />
               </View>
-              <Text style={styles.actionTitle}>Settings</Text>
-              <Text style={styles.actionSubtitle}>Manage account</Text>
+              <Text style={styles.actionTitle} className="text-text text-md font-bold">Settings</Text>
+              <Text style={styles.actionSubtitle} className={ui.subtle + ' text-xs'}>Manage account</Text>
             </GlassCard>
           </TouchableOpacity>
           </Animated.View>
@@ -122,6 +123,9 @@ export default function DashboardScreen() {
     </LinearGradient>
   );
 }
+
+// Keep two cards per row at ~40vw each
+const CARD_WIDTH = Math.floor(Dimensions.get('window').width * 0.40);
 
 const styles = StyleSheet.create({
   container: {
@@ -187,7 +191,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   actionCardWrapper: {
-    width: '48%',
+    width: CARD_WIDTH,
     marginBottom: theme.spacing.md,
   },
   actionCard: {

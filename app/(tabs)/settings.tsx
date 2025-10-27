@@ -11,6 +11,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { User, Smartphone, Bell, ChevronRight } from 'lucide-react-native';
 import { GlassCard } from '@/components/GlassCard';
 import { theme } from '@/constants/theme';
+import { ui } from '@/constants/ui';
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -57,7 +58,7 @@ export default function SettingsScreen() {
       style={styles.container}
     >
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Settings</Text>
+        <Text style={styles.headerTitle} className="text-text text-2xl font-bold">Settings</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -65,10 +66,10 @@ export default function SettingsScreen() {
           <View key={sectionIndex} style={styles.section}>
             <View style={styles.sectionHeader}>
               <section.icon size={20} color={theme.colors.primary} />
-              <Text style={styles.sectionTitle}>{section.title}</Text>
+              <Text style={styles.sectionTitle} className="text-text text-md font-bold ml-sm">{section.title}</Text>
             </View>
 
-            <GlassCard>
+            <GlassCard className={ui.cardContainer} contentClassName={ui.cardContent}>
               {section.items.map((item, itemIndex) => (
                 <TouchableOpacity
                   key={itemIndex}
@@ -79,8 +80,8 @@ export default function SettingsScreen() {
                   ]}
                 >
                   <View style={styles.settingInfo}>
-                    <Text style={styles.settingLabel}>{item.label}</Text>
-                    <Text style={styles.settingDescription}>{item.description}</Text>
+                    <Text style={styles.settingLabel} className="text-text text-md font-medium mb-xs">{item.label}</Text>
+                    <Text style={styles.settingDescription} className="text-textSecondary text-sm">{item.description}</Text>
                   </View>
                   <ChevronRight size={20} color={theme.colors.textSecondary} />
                 </TouchableOpacity>

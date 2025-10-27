@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  FlatList,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -20,6 +19,7 @@ import Animated, {
 import { ArrowLeft, Video, AlertCircle, PlayCircle } from 'lucide-react-native';
 import { useMonitoring } from '@/contexts/MonitoringContext';
 import { GlassCard } from '@/components/GlassCard';
+import { ui } from '@/constants/ui';
 import { theme } from '@/constants/theme';
 
 export default function MonitoringScreen() {
@@ -43,7 +43,7 @@ export default function MonitoringScreen() {
     } else {
       pulseScale.value = withTiming(1, { duration: 300 });
     }
-  }, [isCrying]);
+  }, [isCrying, pulseScale]);
 
   useEffect(() => {
     waveOpacity.value = withRepeat(
@@ -54,7 +54,7 @@ export default function MonitoringScreen() {
       -1,
       false
     );
-  }, []);
+  }, [waveOpacity]);
 
   const pulseStyle = useAnimatedStyle(() => ({
     transform: [{ scale: pulseScale.value }],
@@ -95,28 +95,28 @@ export default function MonitoringScreen() {
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {!isMonitoring ? (
-          <GlassCard style={styles.notActiveCard}>
+          <GlassCard style={styles.notActiveCard} className={ui.cardContainer} contentClassName={ui.cardContent + ' items-center py-xxl'}>
             <AlertCircle size={48} color={theme.colors.warning} />
-            <Text style={styles.notActiveTitle}>No Active Device</Text>
-            <Text style={styles.notActiveText}>
+            <Text style={styles.notActiveTitle} className="text-text text-xl font-bold mt-lg mb-sm">No Active Device</Text>
+            <Text style={styles.notActiveText} className="text-textSecondary text-md text-center mb-xl">
               Connect a monitoring device to start live monitoring
             </Text>
             <TouchableOpacity
               onPress={() => router.push('/settings')}
               style={styles.setupButton}
             >
-              <Text style={styles.setupButtonText}>Setup Device</Text>
+              <Text style={styles.setupButtonText} className="text-text text-md font-bold">Setup Device</Text>
             </TouchableOpacity>
           </GlassCard>
         ) : (
           <>
-            <GlassCard style={styles.liveCard}>
+            <GlassCard style={styles.liveCard} className={ui.cardContainer} contentClassName={ui.cardContent}>
               <View style={styles.liveHeader}>
-                <View style={styles.liveIndicator}>
+                <View style={styles.liveIndicator} className="flex-row items-center bg-[rgba(255,0,0,0.1)] px-md py-sm rounded-full">
                   <Animated.View style={[styles.liveDot, waveStyle]} />
-                  <Text style={styles.liveText}>LIVE</Text>
+                  <Text style={styles.liveText} className="text-error text-xs font-bold">LIVE</Text>
                 </View>
-                <Text style={styles.deviceName}>{devices[0]?.device_name}</Text>
+                <Text style={styles.deviceName} className="text-textSecondary text-sm">{devices[0]?.device_name}</Text>
               </View>
 
               <View style={styles.videoPlaceholder}>
@@ -145,37 +145,37 @@ export default function MonitoringScreen() {
             </GlassCard>
 
             <View style={styles.historyHeader}>
-              <Text style={styles.historyTitle}>Recent Events</Text>
-              <Text style={styles.historyCount}>
+              <Text style={styles.historyTitle} className="text-text text-lg font-bold">Recent Events</Text>
+              <Text style={styles.historyCount} className="text-textSecondary text-sm">
                 {cryEvents.length} event{cryEvents.length !== 1 ? 's' : ''}
               </Text>
             </View>
 
             {cryEvents.length === 0 ? (
-              <GlassCard style={styles.emptyCard}>
-                <Text style={styles.emptyText}>No cry events detected yet</Text>
+              <GlassCard style={styles.emptyCard} className={ui.cardContainer} contentClassName={ui.cardContent + ' items-center py-xl'}>
+                <Text style={styles.emptyText} className="text-textSecondary text-md">No cry events detected yet</Text>
               </GlassCard>
             ) : (
               <View style={styles.eventsList}>
                 {cryEvents.slice(0, 10).map((event) => (
-                  <GlassCard key={event.id} style={styles.eventCard}>
+                  <GlassCard key={event.id} style={styles.eventCard} className={ui.cardContainer} contentClassName={ui.cardContent}>
                     <View style={styles.eventHeader}>
                       <View style={styles.eventIcon}>
                         <PlayCircle size={20} color={theme.colors.primary} />
                       </View>
                       <View style={styles.eventInfo}>
-                        <Text style={styles.eventTime}>
+                        <Text style={styles.eventTime} className="text-text text-md font-medium">
                           {formatTime(event.detected_at)}
                         </Text>
-                        <Text style={styles.eventDate}>
+                        <Text style={styles.eventDate} className="text-textSecondary text-xs mt-[2px]">
                           {formatDate(event.detected_at)}
                         </Text>
                       </View>
                       <View style={styles.eventMeta}>
-                        <Text style={styles.eventDuration}>
+                        <Text style={styles.eventDuration} className="text-primary text-sm font-medium">
                           {event.duration_seconds}s
                         </Text>
-                        <Text style={styles.eventConfidence}>
+                        <Text style={styles.eventConfidence} className="text-textSecondary text-xs mt-[2px]">
                           {Math.round(event.confidence_level * 100)}%
                         </Text>
                       </View>

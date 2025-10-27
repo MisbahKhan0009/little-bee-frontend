@@ -5,9 +5,9 @@ import {
   StyleSheet,
   ActivityIndicator,
   ViewStyle,
-  TextStyle
+  TextStyle,
+  Animated,
 } from 'react-native';
-import { Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '@/constants/theme';
 
@@ -19,6 +19,8 @@ interface ButtonPrimaryProps {
   style?: ViewStyle;
   textStyle?: TextStyle;
   variant?: 'primary' | 'secondary' | 'danger';
+  className?: string;
+  textClassName?: string;
 }
 
 export function ButtonPrimary({
@@ -29,6 +31,8 @@ export function ButtonPrimary({
   style,
   textStyle,
   variant = 'primary',
+  className,
+  textClassName,
 }: ButtonPrimaryProps) {
   const scale = useRef(new Animated.Value(1)).current;
   const getColors = () => {
@@ -50,6 +54,7 @@ export function ButtonPrimary({
       onPressIn={() => Animated.spring(scale, { toValue: 0.96, useNativeDriver: true, friction: 6 }).start()}
       onPressOut={() => Animated.spring(scale, { toValue: 1, useNativeDriver: true, friction: 6 }).start()}
       style={[styles.container, style as any]}
+      className={className as any}
     >
       <Animated.View style={{ transform: [{ scale }] }}>
         <LinearGradient
@@ -61,7 +66,9 @@ export function ButtonPrimary({
           {loading ? (
             <ActivityIndicator color={theme.colors.text} />
           ) : (
-            <Text style={[styles.text, textStyle as any]}>{title}</Text>
+            <Text style={[styles.text, textStyle as any]} className={textClassName as any}>
+              {title}
+            </Text>
           )}
         </LinearGradient>
       </Animated.View>

@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { View, Text, Dimensions, StyleSheet, ScrollView } from 'react-native';
+import { Text, Dimensions, StyleSheet, ScrollView } from 'react-native';
+import { ui } from '@/constants/ui';
 import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '@/constants/theme';
 import { GlassCard } from '@/components/GlassCard';
@@ -59,10 +60,10 @@ export default function StatisticsScreen() {
   return (
     <LinearGradient colors={[theme.colors.background, theme.colors.secondary]} style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Statistics</Text>
-        <Text style={styles.subtitle}>Past 7 days • Cry events and total cry duration</Text>
+        <Text style={styles.title} className="text-text text-xl font-bold">Statistics</Text>
+        <Text style={styles.subtitle} className="text-textSecondary mt-[6px] mb-[16px]">Past 7 days • Cry events and total cry duration</Text>
 
-        <GlassCard style={styles.card}>
+        <GlassCard style={styles.card} className={ui.cardContainer} contentClassName={ui.cardContent}>
           <Text style={styles.cardTitle}>Daily Cry Events</Text>
           <BarChart
             data={{ labels: countSeries.labels, datasets: [{ data: countSeries.values }] }}
@@ -76,7 +77,7 @@ export default function StatisticsScreen() {
           />
         </GlassCard>
 
-        <GlassCard style={styles.card}>
+        <GlassCard style={styles.card} className={ui.cardContainer} contentClassName={ui.cardContent}>
           <Text style={styles.cardTitle}>Total Crying Duration (min)</Text>
           <LineChart
             data={{ labels: durationSeries.labels, datasets: [{ data: durationSeries.values, strokeWidth: 2 }] }}
@@ -89,9 +90,9 @@ export default function StatisticsScreen() {
           />
         </GlassCard>
 
-        <GlassCard style={styles.noteCard}>
-          <Text style={styles.noteTitle}>Sleep time</Text>
-          <Text style={styles.noteText}>
+        <GlassCard style={styles.noteCard} className={ui.cardContainer} contentClassName={ui.cardContent}>
+          <Text style={styles.noteTitle} className="text-text text-md font-bold mb-[4px]">Sleep time</Text>
+          <Text style={styles.noteText} className="text-textSecondary">
             Sleep tracking isn’t enabled yet because we don’t log sleep sessions. Once sleep events are
             available, this page will chart daily sleep totals alongside crying.
           </Text>

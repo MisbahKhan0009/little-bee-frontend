@@ -1,14 +1,15 @@
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet, ViewStyle, Animated, Easing, StyleProp } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, StyleSheet, ViewStyle, Animated, Easing, StyleProp } from 'react-native';
 import { theme } from '@/constants/theme';
 
 interface GlassCardProps {
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
+  className?: string;
+  contentClassName?: string;
 }
 
-export function GlassCard({ children, style }: GlassCardProps) {
+export function GlassCard({ children, style, className, contentClassName }: GlassCardProps) {
   const opacity = useRef(new Animated.Value(0)).current;
   const translate = useRef(new Animated.Value(6)).current;
   useEffect(() => {
@@ -20,14 +21,11 @@ export function GlassCard({ children, style }: GlassCardProps) {
 
   return (
     <Animated.View style={[styles.container, style, { opacity, transform: [{ translateY: translate }] }]}>
-      <LinearGradient
-        colors={['rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.05)']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.gradient}
-      >
-        {children}
-      </LinearGradient>
+      <View className={className as any}>
+        <View style={styles.content} className={contentClassName as any}>
+          {children}
+        </View>
+      </View>
     </Animated.View>
   );
 }
@@ -44,7 +42,8 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
   },
-  gradient: {
+  content: {
     padding: theme.spacing.md,
+    backgroundColor: 'transparent',
   },
 });

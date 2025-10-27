@@ -14,6 +14,9 @@ interface InputProps extends TextInputProps {
   label?: string;
   error?: string;
   isPassword?: boolean;
+  className?: string;
+  inputClassName?: string;
+  labelClassName?: string;
 }
 
 export function Input({
@@ -21,18 +24,22 @@ export function Input({
   error,
   isPassword = false,
   style,
+  className,
+  inputClassName,
+  labelClassName,
   ...props
 }: InputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <View style={styles.container}>
-      {label && <Text style={styles.label}>{label}</Text>}
+    <View style={styles.container} className={className as any}>
+      {label && <Text style={styles.label} className={labelClassName as any}>{label}</Text>}
       <View style={styles.inputWrapper}>
         <TextInput
           {...props}
           secureTextEntry={isPassword && !showPassword}
           style={[styles.input, error && styles.inputError, style]}
+          className={inputClassName as any}
           placeholderTextColor={theme.colors.textSecondary}
         />
         {isPassword && (

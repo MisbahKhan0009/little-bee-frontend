@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -29,6 +29,12 @@ export function NotificationPopup({
   const translateY = useSharedValue(-200);
   const opacity = useSharedValue(0);
 
+  const handleDismiss = useCallback(() => {
+    translateY.value = withTiming(-200, { duration: 300 });
+    opacity.value = withTiming(0, { duration: 300 });
+    setTimeout(onDismiss, 300);
+  }, [onDismiss, opacity, translateY]);
+
   useEffect(() => {
     if (visible) {
       translateY.value = withSpring(0, { damping: 15 });
@@ -43,13 +49,7 @@ export function NotificationPopup({
       translateY.value = withTiming(-200, { duration: 300 });
       opacity.value = withTiming(0, { duration: 300 });
     }
-  }, [visible]);
-
-  const handleDismiss = () => {
-    translateY.value = withTiming(-200, { duration: 300 });
-    opacity.value = withTiming(0, { duration: 300 });
-    setTimeout(onDismiss, 300);
-  };
+  }, [visible, handleDismiss, opacity, translateY]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],

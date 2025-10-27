@@ -3,8 +3,8 @@ module.exports = function (api) {
   return {
     presets: ['babel-preset-expo'],
     plugins: [
-      // Keep expo-router/babel before reanimated plugin
-      'expo-router/babel',
+      // Enable NativeWind Tailwind classes
+      'nativewind/babel',
       // Reanimated plugin must be listed last
       'react-native-reanimated/plugin',
     ],

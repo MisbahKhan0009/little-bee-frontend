@@ -4,7 +4,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '@/constants/theme';
 import { GlassCard } from '@/components/GlassCard';
-import { ButtonPrimary } from '@/components/ButtonPrimary';
 import { askGroq, ChatMessage } from '@/lib/groq';
 import Markdown from 'react-native-markdown-display';
 
@@ -66,9 +65,8 @@ export default function ChatbotScreen() {
     <LinearGradient colors={[theme.colors.background, theme.colors.secondary]} style={styles.container}>
       <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={insets.top + 12}>
         <View style={[styles.headerWrap, { paddingTop: Math.max(60, insets.top + 20) }]}>
-          <GlassCard>
-            <Text style={styles.title}>Childcare Chatbot</Text>
-            
+          <GlassCard className="rounded-3xl border border-glassBorder" contentClassName="p-md">
+            <Text style={styles.title} className="text-text text-xl font-bold">Childcare Chatbot</Text>
           </GlassCard>
         </View>
         <FlatList
@@ -78,20 +76,21 @@ export default function ChatbotScreen() {
           contentContainerStyle={[styles.listContent, { paddingBottom: 16 }]}
         />
         <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 2) }]}>
-          <GlassCard style={styles.inputCard}>
-            <View style={styles.inputRow}>
+          <GlassCard style={styles.inputCard} className="rounded-3xl border border-glassBorder" contentClassName="p-0">
+            <View style={styles.inputRow} className="flex-row items-center">
               <TextInput
                 value={input}
                 onChangeText={setInput}
                 placeholder="Ask about sleep, feeding, soothing..."
                 placeholderTextColor={theme.colors.textSecondary}
                 style={styles.input}
+                className="text-text text-md px-md py-md flex-1"
                 editable={!loading}
                 onSubmitEditing={sendMessage}
                 returnKeyType="send"
               />
-              <TouchableOpacity onPress={sendMessage} disabled={loading} style={styles.sendBtn}>
-                {loading ? <ActivityIndicator color={theme.colors.text} /> : <Text style={styles.sendText}>Send</Text>}
+              <TouchableOpacity onPress={sendMessage} disabled={loading} style={styles.sendBtn} className="px-lg py-md border-l border-glassBorder">
+                {loading ? <ActivityIndicator color={theme.colors.text} /> : <Text style={styles.sendText} className="text-text font-bold">Send</Text>}
               </TouchableOpacity>
             </View>
           </GlassCard>

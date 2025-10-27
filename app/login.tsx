@@ -14,6 +14,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Input } from '@/components/Input';
 import { ButtonPrimary } from '@/components/ButtonPrimary';
 import { theme } from '@/constants/theme';
+import { ui } from '@/constants/ui';
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -56,8 +57,8 @@ export default function LoginScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.header}>
-            <Text style={styles.title}>Child Monitoring</Text>
-            <Text style={styles.subtitle}>Welcome back</Text>
+            <Text style={styles.title} className="text-text text-3xl font-bold mb-sm">Child Monitoring</Text>
+            <Text style={styles.subtitle} className={ui.subtle + ' text-lg'}>Welcome back</Text>
           </View>
 
           <View style={styles.form}>
@@ -68,6 +69,9 @@ export default function LoginScreen() {
               onChangeText={setEmailOrUsername}
               autoCapitalize="none"
               keyboardType="email-address"
+              className="mb-md"
+              labelClassName="text-text text-sm font-medium mb-xs"
+              inputClassName="bg-[rgba(255,255,255,0.1)] rounded-2xl border border-glassBorder text-text text-md px-md py-md"
             />
             <Input
               label="Password"
@@ -75,6 +79,9 @@ export default function LoginScreen() {
               value={password}
               onChangeText={setPassword}
               isPassword
+              className="mb-md"
+              labelClassName="text-text text-sm font-medium mb-xs"
+              inputClassName="bg-[rgba(255,255,255,0.1)] rounded-2xl border border-glassBorder text-text text-md px-md py-md"
             />
 
             {error ? <Text style={styles.error}>{error}</Text> : null}
@@ -84,19 +91,21 @@ export default function LoginScreen() {
               onPress={handleLogin}
               loading={loading}
               style={styles.loginButton}
+              className="rounded-2xl"
+              textClassName="font-bold text-white"
             />
 
             <TouchableOpacity
               onPress={() => router.push('/forgot-password')}
               style={styles.forgotButton}
             >
-              <Text style={styles.forgotText}>Forgot Password?</Text>
+              <Text style={styles.forgotText} className="text-primary text-sm">Forgot Password?</Text>
             </TouchableOpacity>
 
             <View style={styles.registerContainer}>
-              <Text style={styles.registerText}>Don’t have an account? </Text>
+              <Text style={styles.registerText} className={ui.subtle + ' text-sm'}>Don’t have an account? </Text>
               <TouchableOpacity onPress={() => router.push('/register')}>
-                <Text style={styles.registerLink}>Sign Up</Text>
+                <Text style={styles.registerLink} className="text-primary text-sm font-bold">Sign Up</Text>
               </TouchableOpacity>
             </View>
           </View>

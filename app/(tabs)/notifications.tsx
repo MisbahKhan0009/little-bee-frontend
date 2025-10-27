@@ -7,11 +7,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Bell, CheckCheck, Trash2 } from 'lucide-react-native';
+import { Bell, CheckCheck } from 'lucide-react-native';
 import { useMonitoring } from '@/contexts/MonitoringContext';
 import { GlassCard } from '@/components/GlassCard';
-import { ButtonPrimary } from '@/components/ButtonPrimary';
+// import { ButtonPrimary } from '@/components/ButtonPrimary';
 import { theme } from '@/constants/theme';
+import { ui } from '@/constants/ui';
 
 export default function NotificationsScreen() {
   const { notifications, markNotificationRead, markAllNotificationsRead, unreadCount } =
@@ -42,6 +43,8 @@ export default function NotificationsScreen() {
           styles.notificationCard,
           !item.is_read && styles.notificationCardUnread,
         ]}
+        className={ui.cardContainer}
+        contentClassName={ui.cardContent}
       >
         <View style={styles.notificationHeader}>
           <View
@@ -96,10 +99,10 @@ export default function NotificationsScreen() {
 
       {notifications.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <GlassCard style={styles.emptyCard}>
+          <GlassCard style={styles.emptyCard} className={ui.cardContainer} contentClassName={ui.cardContent + ' items-center py-xxl'}>
             <Bell size={48} color={theme.colors.textSecondary} />
-            <Text style={styles.emptyTitle}>No Notifications</Text>
-            <Text style={styles.emptyText}>
+            <Text style={styles.emptyTitle} className="text-text text-lg font-bold mt-lg mb-sm">No Notifications</Text>
+            <Text style={styles.emptyText} className="text-textSecondary text-md text-center">
               You’ll see cry detection alerts here
             </Text>
           </GlassCard>
